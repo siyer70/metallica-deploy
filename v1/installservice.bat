@@ -1,0 +1,1 @@
+bin\mongod.exe --config mongod.cfg --install
