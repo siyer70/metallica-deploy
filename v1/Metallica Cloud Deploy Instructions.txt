@@ -1,0 +1,46 @@
+Use a subscription and create all resources under the same subscription
+Create a resource group in a region and all other under-mentioned resources in the same region
+Create a new Virtual Network
+10.1.0.0/16
+Create a new subnet
+10.1.0.0/24
+Create a VM (preferably with 14 GB ram, atleast 10 gb ssd drive)
+Provide the dns label: metallica so that it becomes
+metallica.<region>.cloudapp.azure.com for eg: metallica.southindia.cloudapp.azure.com
+Configure nsg - define inbound rules to open port 80, 3050 TCP port
+Disable Windows firewall from the server manager
+
+Install the following
+Install Node
+Install MongoDB
+Install RoboMongo
+Install Erlang
+Install RabbitMQ
+Install Postgresql
+Install JDK/JRE
+Install Notepad++
+Install Visual Source Code
+Install Postman
+Take metallica code (server side code) from github
+Take metallica-deploy code (apigateway, discovery and ui, mongo config, runservices.bat) from github
+Deploy metallica server, gateway and frontend
+check and start rabbitmq service
+install mongodb startup service using the script provided
+start mongodb service and check it is accessible
+start postgres using the admin tool and check it is accessible
+runservices.bat(that takes care of the following)
+	start the discovery service
+	start the gateway service
+	start the trade service
+	start the reference data service
+	start the notification service
+	start the marketdata service
+check the eureka admin url to see gateway, trade and ref data services are registered
+check notification service running
+check marketdata service running
+check access from your localhost 
+	in powershell (version > 4), use the following command
+		Test-NetConnection <hostname> -port <port> 	
+		Specifically test whether port 80 and 3050 is open
+Run postman and check whether you are able to access trade and refdata services from the gateway without any issues
+Start the application in the browser using DNSName
