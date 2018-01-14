@@ -1,3 +1,7 @@
+Pre configured Server in Azure
+MyAppServer
+userid: srinivca
+password: AzureABCD12ab!
 Use a subscription and create all resources under the same subscription
 Create a resource group in a region and all other under-mentioned resources in the same region
 Create a new Virtual Network

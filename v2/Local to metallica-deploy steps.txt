@@ -1,0 +1,22 @@
+1. Step one build apigateway and discovery jar
+	a. go to javaws\metallica-apigateway-spring-cloud directory
+	b. remove the target folder in discovery and in gateway folders
+	c. run "mvn package"
+	d. go to the target folder
+	e. take the jars and copy it to metallica-deploy\v2
+	f. for local run change the gateway-service to gateway-service-local
+
+2. Build the UI wepback jar	
+	a. go to the metallica-app folder
+	b. run "npm run build"
+	c. go the build directory and take the stuff
+	d. copy it into resources folder in metallica-deploy\v2\<local/prod> 
+	e. for local, take the keystore.jks from v2\local\keystore folder 
+	e. for prod, take the keystore.jks from v2\prod\keystore folder 
+
+3. take the nodejs server code and zip it
+	a. go to the metallica folder
+	b. select all and deselect node_modules, package_lock.josn and zip it
+	c. copy the metallica.zip in metallica-deploy\v2
+
+4. for local run, go to the metallica folder and click runservices

@@ -1,0 +1,172 @@
+C:\Users\sshek2\javaws\metallica-apigateway-spring-cloud\gateway-service>
+
+keytool.exe -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass metallica -validity 360 -keysize 2048
+What is your first and last name?
+  [Unknown]:  localhost
+What is the name of your organizational unit?
+  [Unknown]:  Commodities
+What is the name of your organization?
+  [Unknown]:  xyz.com
+What is the name of your City or Locality?
+  [Unknown]:  Delhi
+What is the name of your State or Province?
+  [Unknown]:  Delhi
+What is the two-letter country code for this unit?
+  [Unknown]:  IN
+Is CN=Chandrasekhar Srinivasa, OU=Commodities, O=xyz.com, L=Delhi, ST=Delhi, C=I
+N correct?
+  [no]:  yes
+
+Enter key password for <selfsigned>
+        (RETURN if same as keystore password):
+
+(ignore)
+Warning:
+The JKS keystore uses a proprietary format. It is recommended to migrate to PKCS12 which is an industry standard format using 
+"keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12".
+
+"c:\Program Files\Java\jdk1.8.0_151\bin\keytool.exe" -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12
+
+moved it to src/main/resources folder
+
+export the cer file from browser after hitting your site (for example metallica.cer) and
+Add it to the jre\lib\security\cacerts keystore
+keytool -keystore cacerts -importcert -alias selfsigned -file metallica.cer
+
+deleting the imported certificate
+keytool -delete -alias selfsigned -keystore cacerts
+
+references:
+https://gist.github.com/elviejokike/46845544b8df354e396fe820f5386056
+
+WORKING SETTING - SSL SETTING WORKING AT THE GATEWAY LEVEL
+--------------------------------------------------
+info:
+  component: Edge Server
+  
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+zuul:
+  prefix: /services
+
+ribbon:
+  eureka:
+    enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+      
+server:
+  port: 8765
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.jks
+    key-store-password: metallica
+    key-alias: selfsigned
+    keyStoreType: JKS  
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  h2.console.enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+    com.xyz.metallica.gateway: DEBUG
+
+
+
+
+
+NOT WORKING
+-----------
+
+PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+
+discovery servie changes
+server:  
+  port: ${PORT:8761}
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.jks
+    key-store-password: metallica
+    key-alias: selfsigned
+    keyStoreType: JKS  
+  
+    
+eureka:  
+  instance:
+    nonSecurePortEnabled: false
+    securePortEnabled: true
+    securePort: ${server.port}
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    enableSelfPreservation: false
+
+gateway changes	
+	
+info:
+  component: Edge Server
+  
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+zuul:
+  prefix: /services
+
+ribbon:
+  IsSecure: true
+  TrustStore: classpath:keystore.jks
+  TrustStorePassword : metallica
+  eureka:
+    enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: https://localhost:8761/eureka/
+    registerWithEureka: true
+      
+server:
+  port: 8765
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.jks
+    key-store-password: metallica
+    key-alias: selfsigned
+    keyStoreType: PKCS12  
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  h2.console.enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+    com.xyz.metallica.gateway: DEBUG
